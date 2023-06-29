@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:my_movie_list/model/movie_model.dart';
-import 'package:my_movie_list/repositories/movie_repository.dart';
+import 'package:my_movie_list/Movies/model/movie_model.dart';
+import 'package:my_movie_list/Movies/repositories/movie_repository.dart';
 
-class MovieGetDiscoverProvide with ChangeNotifier {
+class MovieSearchProvider with ChangeNotifier {
   final MovieRepository _movieRepository;
 
-  MovieGetDiscoverProvide(this._movieRepository);
+  MovieSearchProvider(this._movieRepository);
 
   bool _isLoading = false;
   bool get isLoading => _isLoading;
@@ -13,29 +13,28 @@ class MovieGetDiscoverProvide with ChangeNotifier {
   final List<MovieModel> _movies = [];
   List<MovieModel> get movies => _movies;
 
-  void getDicover(BuildContext context) async {
+  void search(BuildContext context, {required String query}) async {
     _isLoading = true;
     notifyListeners();
 
-    final result = await _movieRepository.getDiscover();
+    final result = await _movieRepository.search(query: query);
 
     result.fold(
       (errorMessage) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(errorMessage),
-          ),
-        );
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text(errorMessage),
+        ));
 
         _isLoading = false;
         notifyListeners();
+        return;
       },
       (response) {
         _movies.clear();
         _movies.addAll(response.results);
-
         _isLoading = false;
         notifyListeners();
+        return;
       },
     );
   }
