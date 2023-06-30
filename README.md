@@ -252,3 +252,9 @@ class _WidgetTitle extends SliverToBoxAdapter {
       );
 }
 ```
+
+# How to install
+
+- You guys can clone this github
+- And then make sure that you guys have a flutter installed in your computer
+- And then you can do flutter run, to run this application
